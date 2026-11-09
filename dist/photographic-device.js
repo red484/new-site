@@ -1,0 +1,10 @@
+(()=>{
+function project(m,x,y){const w=m[3]*x+m[7]*y+1;return [(m[0]*x+m[4]*y+m[12])/w,(m[1]*x+m[5]*y+m[13])/w]}
+function warp(from,to){const a=[],b=[];from.forEach(([x,y],i)=>{const [u,v]=to[i];a.push([x,y,1,0,0,0,-u*x,-u*y]);b.push(u);a.push([0,0,0,x,y,1,-v*x,-v*y]);b.push(v)});for(let c=0;c<8;c++){let pivot=c;for(let r=c+1;r<8;r++)if(Math.abs(a[r][c])>Math.abs(a[pivot][c]))pivot=r;[a[c],a[pivot]]=[a[pivot],a[c]];[b[c],b[pivot]]=[b[pivot],b[c]];const d=a[c][c];for(let j=c;j<8;j++)a[c][j]/=d;b[c]/=d;for(let r=0;r<8;r++){if(r===c)continue;const f=a[r][c];for(let j=c;j<8;j++)a[r][j]-=f*a[c][j];b[r]-=f*b[c]}}const [h0,h1,h2,h3,h4,h5,h6,h7]=b;return `matrix3d(${[h0,h3,0,h6,h1,h4,0,h7,0,0,1,0,h2,h5,0,1].join(',')})`}
+window.createPhotographicPhone=(host)=>{
+ host.classList.add('photographic-phone');
+ host.innerHTML='<div class="mockup-canvas">'+window.iphone17Poses.map(p=>{const [x,y,w,h]=p.bodyStyle,[mx,my,mw,mh]=p.maskStyle;return `<div class="mockup-pose"><img class="psd-body" src="assets/iphone17-${p.name}-body.png" alt="실버 아이폰 17 Pro 목업" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px"><div class="psd-screen-mask" style="mask-image:url(${p.maskUrl});mask-mode:luminance;mask-size:${mw}px ${mh}px;mask-position:${mx}px ${my}px"><div class="psd-content" style="transform:matrix3d(${p.matrix.join(',')})"></div></div></div>`}).join('')+'</div>';
+ const canvas=host.firstElementChild,poses=[...canvas.children],quads=window.iphone17Poses.map(p=>[[0,0],[390,0],[390,844],[0,844]].map(([x,y])=>project(p.matrix,x,y)));new ResizeObserver(()=>canvas.style.transform=`scale(${host.clientWidth/1000})`).observe(host);
+ return {setContent(html){poses.forEach(p=>p.querySelector('.psd-content').innerHTML=html)},turn(base,t,reduced){const start=base%2,end=(base+1)%2,k=reduced?(t>=.5?1:0):t*t*(3-2*t);const target=quads[start].map((p,j)=>p.map((v,c)=>v+(quads[end][j][c]-v)*k));poses.forEach((p,i)=>{p.style.zIndex=i===start?'0':'1';p.style.opacity=i===start?1:k;p.style.transform=warp(quads[i],target)})},screens(){return poses.map(p=>p.querySelector('.psd-content'))}};
+};
+})();

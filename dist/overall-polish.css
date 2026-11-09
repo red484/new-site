@@ -1,0 +1,41 @@
+/* The collection connects the opening identity, individual experiences and a useful finale. */
+.collection-bridge{padding:66px 10% 30px;display:flex;align-items:flex-end;justify-content:space-between;gap:30px;background:#fff}
+.bridge-kicker{font:500 9px/1.4 -apple-system,BlinkMacSystemFont,sans-serif;letter-spacing:1.3px;color:#86868b}
+.collection-bridge h2{font-size:24px;font-weight:600;line-height:1.4;letter-spacing:-.035em;margin:12px 0 0;color:#1d1d1f}
+.collection-bridge>a{white-space:nowrap;font-size:11px;color:#6e6e73;padding:5px 0;display:flex;gap:13px}
+.collection-bridge>a:hover{color:#0066cc}.collection-bridge>a:focus-visible{outline:2px solid #0066cc;outline-offset:6px}
+.family-directory{padding:100px 8% 0;background:#f5f5f7;text-align:left;scroll-margin-top:0}
+.family-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;margin-bottom:46px}
+.family-heading small{font-size:9px;letter-spacing:1.5px;color:#86868b}
+.family-heading h2{font-size:clamp(28px,3vw,40px);line-height:1.25;letter-spacing:-.045em;margin:16px 0 0;font-weight:700;color:#1d1d1f}
+.family-directory .family-heading p{font-size:14px;font-weight:400;line-height:1.8;letter-spacing:-.02em;color:#6e6e73;margin:0 0 4px}
+.family-services{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:18px}
+.family-directory .family-service{display:block;margin:0;color:#1d1d1f;text-decoration:none;min-width:0}
+.family-art{position:relative;aspect-ratio:1;overflow:hidden;border-radius:12px;transition:transform .4s cubic-bezier(.2,.7,.2,1)}
+.family-art canvas{width:100%;height:100%;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.family-arrow{position:absolute;right:10px;bottom:10px;display:grid;place-items:center;width:25px;height:25px;background:#ffffffd9;color:#1d1d1f;border-radius:50%;font-size:14px;opacity:0;transform:translateY(5px);transition:opacity .2s,transform .3s}
+.family-service:hover .family-art{transform:translateY(-4px)}.family-service:hover canvas{transform:scale(1.045)}.family-service:hover .family-arrow,.family-service:focus-visible .family-arrow{opacity:1;transform:none}
+.family-service:focus-visible{outline:2px solid #0066cc;outline-offset:7px;border-radius:12px}
+.family-label{padding:17px 2px 0}.family-directory .family-label strong{font:600 15px/1.4 -apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo',sans-serif;letter-spacing:-.03em;display:block;white-space:nowrap}.family-label small{display:block;font:400 11px/1.5 -apple-system,BlinkMacSystemFont,sans-serif;letter-spacing:0;color:#86868b;margin-top:5px}
+.family-signoff{display:flex;align-items:center;flex-direction:column;text-align:center;padding:112px 0 90px}
+.family-signoff>span{font-size:13px;letter-spacing:-.02em;color:#86868b}
+.family-directory .family-signoff>strong{display:block;font:600 clamp(40px,7.4vw,106px)/1.1 Arial,sans-serif;letter-spacing:-.065em;color:#1d1d1f;margin-top:23px;white-space:nowrap}
+.replay-brand{display:flex;align-items:center;gap:12px;border:0;background:none;padding:10px;margin-top:30px;font-size:11px;color:#6e6e73}.replay-brand:hover{color:#0066cc}.replay-brand:focus-visible{outline:2px solid #0066cc;outline-offset:3px;border-radius:5px}
+body>footer{background:#fff;color:#86868b;font-size:12px;font-weight:500;border-color:#e7e7e9;margin:0;padding:28px 8%}body>footer small{color:#86868b}
+@media(max-width:1000px) and (min-width:751px){.family-services{gap:12px}.family-directory .family-label strong{font-size:13px}.family-heading{gap:24px}.family-directory .family-heading p{font-size:12px}}
+@media(max-width:750px){.collection-bridge{padding:36px 7% 26px;display:block}.bridge-kicker{font-size:8px;letter-spacing:1px}.collection-bridge h2{font-size:19px;margin-top:10px;word-break:keep-all}.collection-bridge>a{display:inline-flex;margin-top:16px;font-size:10px}.family-directory{padding:60px 7% 0}.family-heading{display:block;margin-bottom:30px}.family-heading h2{font-size:29px}.family-directory .family-heading p{font-size:12px;margin-top:18px}.family-services{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 15px}.family-label{padding-top:12px}.family-directory .family-label strong{font-size:14px}.family-label small{font-size:10px}.family-arrow{opacity:1;transform:none;width:23px;height:23px;font-size:13px}.family-signoff{padding:70px 0 55px}.family-directory .family-signoff>strong{font-size:10.5vw}.family-signoff>span{font-size:11px}.replay-brand{font-size:10px;margin-top:22px}body>footer{padding:22px 7%;font-size:10px}}
+@media(prefers-reduced-motion:reduce){.family-art,.family-art canvas,.family-arrow{transition:none}.family-service:hover .family-art,.family-service:hover canvas{transform:none}}
+
+/* Quiet navigation: readable context, generous targets, unchanged device scale. */
+.journey-controls{height:44px}
+.journey-controls .rotation-hint{align-items:center;gap:12px;letter-spacing:0;font-size:11px;color:#86868b}
+.rotation-hint .current-app-name{font-weight:600;color:#48484b}
+.rotation-hint .current-scene-name{font:400 10px/1.4 -apple-system,BlinkMacSystemFont,sans-serif;color:#86868b}
+.journey-controls .app-chapters{padding:0 8px;gap:0}
+.app-chapters button,.app-chapters button[aria-current="true"]{width:40px;height:44px}
+.app-chapters button[aria-current="true"]::after{left:6.5px;top:19.5px}
+.journey-controls .next-screen{min-height:44px;align-items:center;font-size:11px}
+.journey-copy p{word-break:keep-all;text-wrap:pretty}
+.journey-copy h2{word-break:keep-all}
+.identity-module:focus-visible{outline:3px solid #20231d;outline-offset:5px}
+@media(max-width:750px){.journey-controls{left:5%;right:5%;bottom:max(15px,env(safe-area-inset-bottom))}.journey-controls .rotation-hint{display:none}.journey-controls .app-chapters{padding:0 4px}.app-chapters button,.app-chapters button[aria-current="true"]{width:36px;height:44px}.app-chapters button[aria-current="true"]::after{left:4.5px}.journey-controls .next-screen{font-size:10px;gap:6px;padding:0 4px}}

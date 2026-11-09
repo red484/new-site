@@ -1,0 +1,5 @@
+iPhone 16 Pro Natural Titanium frame
+Source: https://github.com/weirdapps/mockups/blob/master/src/mockups/frames/16%20Pro%20-%20Natural%20Titanium.png
+Project license: MIT (see device-LICENSE.txt).
+Repository notes frame imagery is based on Apple's publicly available product imagery. iPhone is an Apple trademark. Local concept mockup; no Apple endorsement implied.
+Motion reference: https://www.apple.com/kr/macbook-neo/

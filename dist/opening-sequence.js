@@ -1,0 +1,61 @@
+(()=>{
+const host=document.querySelector('.opening');host.querySelector('#opening-pattern').style.visibility='hidden';host.querySelector('.opening-title').style.display='none';
+const names=['아이돌코인','AFMovie','달빛 사주','온서','Citrush','이짤이이짤'],words=['ash','wood','fri','e','n','ds'],colors=['#f581e4','#dbed32','#4040df','#ed653f','#258256','#f5eee1'];
+const shapes=['M0 0H80V80H0Z M20 20V60H60V20Z','M0 0H32V32H0Z M48 0H80V32H48Z M24 48H56V80H24Z','M40 0L80 40L40 80L0 40Z','M0 0H80V40A40 40 0 0 1 0 40Z','M40 0A40 40 0 1 1 39.99 0Z M40 22A18 18 0 1 0 40.01 22Z','M0 0H32V32H0Z M48 0H80V32H48Z M0 48H32V80H0Z M48 48H80V80H48Z'];
+const links=[...document.querySelectorAll('.service')],stage=document.createElement('div');stage.className='identity-stage refined';stage.innerHTML='<div class="identity-line" aria-label="ashwood friends"></div><div class="identity-caption">서로 다른 가능성이 모여, 애쉬우드프렌즈.</div>';host.append(stage);const line=stage.firstElementChild;
+let elapsed=0,clock=0,paused=false,last=performance.now(),active=-1,lastSource=null,closing=false;const hover=Array(6).fill(0),localClocks=Array(6).fill(0);const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+const modules=names.map((name,i)=>{const b=document.createElement('button');b.className='identity-module';b.style.setProperty('--c',colors[i]);b.setAttribute('aria-label',name+' 소개 보기');b.innerHTML=`<div class="module-glyph"><svg viewBox="0 0 80 80" aria-hidden="true"><path fill-rule="evenodd" d="${shapes[i]}"/></svg></div><canvas class="module-pattern" aria-hidden="true"></canvas><span class="module-word">${words[i]}</span><span class="module-service"><small>0${i+1}</small>${name}<b>↗</b></span>`;b.onclick=()=>{if(elapsed<5.6)elapsed=5.6;document.dispatchEvent(new CustomEvent('ashwood:select',{detail:i}))};b.onpointerenter=()=>active=i;b.onpointerleave=()=>active=-1;b.onfocus=()=>active=i;b.onblur=()=>active=-1;line.append(b);return {b,g:b.querySelector('.module-glyph'),c:b.querySelector('canvas'),w:b.querySelector('.module-word'),s:b.querySelector('.module-service')}});
+function openService(i,source){lastSource=source;
+ const from=source.getBoundingClientRect(),snapshot=document.createElement('canvas'),original=source.querySelector('canvas');snapshot.width=original.width;snapshot.height=original.height;snapshot.getContext('2d').drawImage(original,0,0);
+ const dialog=document.querySelector('#detail');dialog.classList.add('continuous-detail');window.ashwoodDetailClock=localClocks[i];links[i]?.click();if(!dialog.open)return;
+ const target=dialog.querySelector('.detail-art'),to=target.getBoundingClientRect(),box=dialog.getBoundingClientRect();
+ if(reduced.matches)return;
+ snapshot.className='transition-surface';snapshot.setAttribute('aria-hidden','true');snapshot.style.cssText=`position:absolute;z-index:8;pointer-events:none;left:${to.left-box.left}px;top:${to.top-box.top}px;width:${to.width}px;height:${to.height}px;transform-origin:0 0;`;dialog.append(snapshot);target.style.opacity='0';
+ const animation=snapshot.animate([{transform:`translate(${from.left-to.left}px,${from.top-to.top}px) scale(${from.width/to.width},${from.height/to.height})`,borderRadius:'3px'},{transform:'translate(0,0) scale(1)',borderRadius:'0px'}],{duration:680,easing:'cubic-bezier(.22,.8,.25,1)',fill:'both'});
+ animation.finished.catch(()=>{}).finally(()=>{target.style.opacity='';snapshot.remove()});
+}
+const detail=document.querySelector('#detail');
+function closeService(event){if(!lastSource||reduced.matches||closing)return;event.preventDefault();event.stopImmediatePropagation();closing=true;
+const from=detail.querySelector('.detail-art').getBoundingClientRect(),to=lastSource.getBoundingClientRect(),box=detail.getBoundingClientRect(),original=detail.querySelector('#detail-pattern'),surface=document.createElement('canvas');surface.width=original.width;surface.height=original.height;surface.getContext('2d').drawImage(original,0,0);surface.setAttribute('aria-hidden','true');surface.style.cssText=`position:absolute;z-index:12;pointer-events:none;left:${from.left-box.left}px;top:${from.top-box.top}px;width:${from.width}px;height:${from.height}px;transform-origin:0 0;`;detail.append(surface);detail.classList.add('returning');
+const animation=surface.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${to.left-from.left}px,${to.top-from.top}px) scale(${to.width/from.width},${to.height/from.height})`,opacity:1}],{duration:520,easing:'cubic-bezier(.65,0,.25,1)',fill:'both'});
+animation.finished.catch(()=>{}).finally(()=>{detail.close();surface.remove();detail.classList.remove('returning');closing=false;lastSource.focus({preventScroll:true})});}
+detail.querySelector('.close').addEventListener('click',closeService,true);detail.addEventListener('cancel',closeService);
+const gathering=document.createElement('div');gathering.className='gathering-mark';gathering.setAttribute('aria-hidden','true');line.append(gathering);
+const pieces=Array.from({length:12},(_,i)=>{const b=document.createElement('i');b.style.background=colors[i%6];gathering.append(b);return b});
+// Render the brand as two complete words, independent of the six moving panels.
+const brandWords=['ashwood','friends'].map(text=>{const el=document.createElement('span');el.textContent=text;el.setAttribute('aria-hidden','true');el.style.cssText='position:absolute;display:flex;align-items:center;height:80px;white-space:nowrap;line-height:1;pointer-events:none;z-index:4;color:#20231d;';line.append(el);return el});
+const measure=document.createElement('canvas').getContext('2d'),clamp=v=>Math.max(0,Math.min(1,v)),ease=v=>{v=clamp(v);return v<.5?8*v**4:1-(-2*v+2)**4/2},mix=(a,b,k)=>a+(b-a)*k;
+let openingVisible=true;new IntersectionObserver(entries=>{openingVisible=entries[0].isIntersecting},{rootMargin:'100px'}).observe(host);
+let bounds={width:0,height:0};new ResizeObserver(es=>{bounds=es[0].contentRect}).observe(line);
+const pause=host.querySelector('#opening-pause'),replay=host.querySelector('#opening-replay');function sync(){pause.textContent=paused?'모션 이어보기 ▷':'모션 멈추기 Ⅱ';pause.setAttribute('aria-pressed',String(paused))}pause.onclick=()=>{paused=!paused;sync()};replay.onclick=()=>{elapsed=reduced.matches?9:0;clock=0;paused=reduced.matches;sync();host.scrollIntoView({behavior:'instant'});replay.focus({preventScroll:true})};if(reduced.matches){elapsed=9;paused=true}sync();reduced.addEventListener('change',e=>{if(e.matches){elapsed=9;paused=true;sync()}});
+function draw(now){const dt=Math.max(0,Math.min((now-last)/1000,.05));last=now;if(!openingVisible||document.hidden){requestAnimationFrame(draw);return}if(!paused&&!document.hidden&&!document.body.classList.contains("splash-active")){elapsed+=dt;clock+=dt}const W=bounds.width,H=bounds.height;const sceneTime=Math.max(0,elapsed-1.6);if(W>0&&H>0){const mobile=innerWidth<=750,fs=mobile?32:Math.min(68,W*.057),spacing=-fs*.052;measure.font=`600 ${fs}px Arial`;const textWidth=text=>measure.measureText(text).width+text.length*spacing;
+const widths=words.map((text,i)=>{const start=i<2?0:2,prefix=words.slice(start,i).join('');return textWidth(prefix+text)-textWidth(prefix)});const total=widths.reduce((a,b)=>a+b,0)+fs*.24;let wordX=(W-total)/2;
+brandWords.forEach((el,g)=>{const raw=clamp((sceneTime-.45-g*.35)/.5),handoff=ease((raw-.28)/.55);el.style.left=((W-total)/2+(g?widths[0]+widths[1]+fs*.24:0))+'px';el.style.top=(H/2-45)+'px';el.style.font=`600 ${fs}px Arial`;el.style.letterSpacing=spacing+'px';el.style.opacity=handoff*(1-ease((sceneTime-2.56)/.28));el.style.transform=`translateX(${(1-handoff)*-5}px)`;});
+// A stronger gathering gesture; the established wordmark and final grid stay intact.
+const gather=1-(1-clamp((elapsed-.12)/1.05))**3,travel=ease((elapsed-1.25)/.7),markSize=mix(mobile?37:49,mobile?25:33,travel);
+const markX=mix(W/2,(W+total)/2+markSize*.9,travel),markY=H/2-5;
+const wordCenters=[];let centerX=(W-total)/2; widths.forEach((width,i)=>{wordCenters.push(centerX+width/2);centerX+=width+(i===1?fs*.24:0)});
+gathering.style.left=markX+'px';gathering.style.top=markY+'px';gathering.style.opacity=1;
+// After the full name rests, its assembled mark unfolds into six paired seeds.
+// Each pair reaches the pattern below its own letter group, then opens that panel.
+pieces.forEach((b,j)=>{
+ const i=j%6,send=2.05+(5-i)*.05,transfer=ease((sceneTime-send)/.48);
+ const angle=j*2.399963+Math.sin(elapsed*2+j)*.09*(1-gather),radius=(mobile?80:142)+(j%3)*(mobile?9:17);
+ const tx=(j%3-1)*markSize/3,ty=(Math.floor(j/3)-1.5)*markSize/4;
+ const fromX=mix(Math.cos(angle)*radius,tx,gather),fromY=mix(Math.sin(angle)*radius,ty,gather);
+ const toX=wordCenters[i]-markX+(j<6?-1:1)*Math.min(widths[i]*.18,9),toY=H/2+27-markY;
+ const blockW=mix(markSize/3+.2,Math.min(widths[i]*.30,16),transfer),blockH=mix(markSize/4+.2,5,transfer);
+ const contact=Math.sin(clamp((sceneTime-send-.40)/.20)*Math.PI);
+ b.style.width=blockW*(1+.24*contact)+'px';b.style.height=blockH*(1-.20*contact)+'px';b.style.opacity=1-ease((sceneTime-send-.44)/.20);
+ b.style.transform=`translate(${mix(fromX,toX,transfer)}px,${mix(fromY,toY,transfer)+Math.sin(transfer*Math.PI)*(mobile?26:34)}px) rotate(${(1-transfer)*(1-gather)*((j%3-1)*35)}deg) scale(${mix(1.45+(j%3)*.20,1,gather)})`;
+});const glyph=mobile?36:58,gap=mobile?14:32,startWidth=6*glyph+5*gap;const cols=mobile?3:6,rows=mobile?2:1,gridGap=mobile?9:12,cellW=(W-gridGap*(cols-1))/cols,cellH=Math.min((H-55-gridGap*(rows-1))/rows,mobile?220:380);const gridY=(H-(cellH*rows+gridGap*(rows-1)))/2-12;
+modules.forEach((m,i)=>{const wordGroup=i<2?0:1,rawLetter=clamp((sceneTime-.45-wordGroup*.35)/.5),letter=ease(rawLetter),assemble=1,send=2.05+(5-i)*.05,expandStart=send+.48,arrival=ease((sceneTime-3.65)/.35),rawExpand=clamp((sceneTime-expandStart)/(4-expandStart)),expand=ease(rawExpand),heightExpand=ease(clamp((rawExpand-.07)/.93));hover[i]+=(Number(active===i&&sceneTime>=4)-hover[i])*(1-Math.exp(-dt*9));if(!paused&&!document.hidden)localClocks[i]+=dt*(.32+hover[i]*.5);const breath=Math.sin(rawExpand*Math.PI)*6;let x0=(W-startWidth)/2+i*(glyph+gap),y0=H/2-45;
+let x=mix(x0,wordX,assemble),y=y0,w=mix(glyph,widths[i],assemble),h=80;wordX+=widths[i]+(i===1?fs*.24:0);x=mix(x,i%cols*(cellW+gridGap),expand);y=mix(y,gridY+Math.floor(i/cols)*(cellH+gridGap)+(mobile?0:i%2*16*(1-arrival)),expand);w=mix(w,cellW,expand);h=mix(h,cellH,heightExpand);y-=breath+hover[i]*6*expand;h+=breath;
+m.b.style.cssText=`--c:${colors[i]};opacity:${ease((elapsed-1.6)/.35)};left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:${mix(0,3+hover[i]*17,expand)}px;background:${expand>.04?colors[i]:'transparent'};`;
+const squeeze=Math.sin(rawLetter*Math.PI);m.g.style.width=Math.min(glyph,widths[i]*.82)+'px';m.g.style.height=Math.min(glyph,widths[i]*.82)+'px';const handoff=ease((rawLetter-.28)/.55);m.g.style.opacity=rawLetter<.84?1:0;m.g.style.clipPath=`inset(0 0 0 ${handoff*100}%)`;m.g.style.transform=`translate(-50%,-50%) scale(${1-squeeze*.2},${1+squeeze*.09})`;
+m.w.style.fontSize=fs+'px';m.w.style.letterSpacing=spacing+'px';m.w.style.opacity=0;m.w.setAttribute('aria-hidden','true');m.w.style.transform=`translateX(${(1-handoff)*-5}px)`;m.w.style.clipPath='none';
+const preview=ease((sceneTime-send-.24)/.30),unfold=ease(expand*3);
+m.c.style.opacity=Math.max(.42*preview*(1-unfold),ease((expand-.2)/.7));m.c.style.clipPath=`inset(${mix(78,(1-expand)*48,unfold)}% ${mix(8,(1-expand)*35,unfold)}% ${mix(8,(1-expand)*48,unfold)}% ${mix(8,(1-expand)*35,unfold)}% round ${mix(2,(1-expand)*50,unfold)}%)`;m.c.style.transform=`scale(${1+(1-expand)*.18+hover[i]*.035})`;m.s.style.opacity=arrival;m.s.style.transform=`translateY(${(1-arrival)*12}px)`;
+if(expand>0||preview>0){const d=Math.min(devicePixelRatio||1,2),cw=Math.round(cellW*d),ch=Math.round(cellH*d);if(m.c.width!==cw||m.c.height!==ch){m.c.width=cw;m.c.height=ch}const ctx=m.c.getContext('2d');ctx.setTransform(cw/w,0,0,ch/h,0,0);window.drawAshwoodPattern(ctx,i,0,0,w,h,reduced.matches?0:localClocks[i])}});
+stage.lastElementChild.style.opacity=ease((sceneTime-1.35)/.65);host.querySelector('.opening-explore').textContent=sceneTime>4?'여섯 서비스를 만나보세요 ↓':'서로 다른 가능성, 하나의 이름 ↓';}requestAnimationFrame(draw)}requestAnimationFrame(draw);
+})();
